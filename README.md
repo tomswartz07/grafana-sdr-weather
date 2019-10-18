@@ -36,3 +36,8 @@ If no errors are presented, then the data should be streaming to the Postgres DB
 From there, you may run Grafana and query the data for graphing.
 An example dashboard `weather.json` file has been included for quick reference.
 
+## Known Limitations
+
+Presently, the following limitations exist:
+- The middleware software only knows how to manipulate Accurite data.
+- All data is written as JSON to a single column until a proper schema can be defined
