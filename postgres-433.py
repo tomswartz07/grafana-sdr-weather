@@ -81,7 +81,8 @@ mappings = {
 }
 
 def connect_to_db(dbname, user, host, password, port):
-    connection = "dbname='%s' user='%s' host='%s' password='%s' port='%s'" % (dbname, user, host, password, port)
+    connection = "dbname='%s' user='%s' host='%s' password='%s' port='%s' application_name='%s'" % (
+        dbname, user, host, password, port, "RTL433")
     try:
         print("Connecting to db")
         return psycopg2.connect(connection)
