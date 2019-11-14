@@ -35,7 +35,7 @@ A program to process dump1090 messages then insert them into a database
 optional arguments:
   -h, --help            show this help message and exit
   --dump1090 DUMP1090   This is the network location of your dump1090
-                        broadcast. Defaults to 10.0.0.26
+                        broadcast. Defaults to 127.0.0.1
   --port PORT           The port broadcasting dump1090 messages in SBS-1
                         BaseStation format. Defaults to 30003
   -d DBNAME, --dbname DBNAME
@@ -63,8 +63,8 @@ optional arguments:
                         The number of seconds to wait after a failed
                         connection attempt before trying again. Defaults to
                         5.0
-  --verbose VERBOSE     Print out the messages as they're received. Defaults
-                        to False
+  --verbose             Print out the messages as they're received. Defaults
+                        to quiet output.
 
 ```
 
