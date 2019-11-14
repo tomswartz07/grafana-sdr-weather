@@ -108,8 +108,9 @@ def commit_data(conn, data, datestamp, args):
             except psycopg2.errors.lookup("22P02") as e:
                 # Sometimes we get bad data in the correct number
                 # Just roll it back, forget about it, and keep going.
-                print(e.pgcode)
-                print(e.pgerror)
+                if args.verbose:
+                    print(e.pgcode)
+                    print(e.pgerror)
                 conn.rollback()
             except psycopg2.Error as e:
                 print(e.pgcode)
