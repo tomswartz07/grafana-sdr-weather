@@ -103,12 +103,13 @@ def commit_sql(conn, sql):
         return ['remove', 'danger', 'Issue Detected']
 
 client = connect_to_db('database', 'user', 'host', 'password', 'port')
-
+print("Connected!")
 test_table = 'CREATE TABLE IF NOT EXISTS weather (id serial PRIMARY KEY, info varchar, data json)'
 commit_sql(client, test_table)
 
 source = sys.stdin
 if sys.argv[1:]:
+    print("Reading input from file {}".format(sys.argv[1:]))
     files = map(lambda name: open(name, 'r'), sys.argv[1:])
     source = itertools.chain.from_iterable(files)
 for line in source:
