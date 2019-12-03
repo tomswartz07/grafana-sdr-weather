@@ -159,7 +159,8 @@ def main():
     "The meat of the program"
     args = args_parse()
     client = connect_to_db(args.dbname, args.dbuser, args.dbhost, args.dbpass, args.dbport, args.dbschema)
-    table_setup = """CREATE TABLE IF NOT EXISTS %s(
+    schema_setup = "CREATE SCHEMA IF NOT EXISTS %s" % (args.dbschema)
+    table_setup = """CREATE TABLE IF NOT EXISTS %s.%s(
                         message_type TEXT,
                         transmission_type INT,
                         session_id TEXT,
@@ -184,7 +185,7 @@ def main():
                         is_on_ground INT,
                         parsed_time TEXT
                 );
-        """ % (dbtable)
+        """ % (args.dbschema, dbtable)
 
     callsign_view = """CREATE OR REPLACE VIEW callsigns AS
                        SELECT callsign,
@@ -214,6 +215,7 @@ def main():
                       and l.parsed_time::timestamp <= (cs.last_seen::timestamp + '10 minutes'::interval)
                       and l.parsed_time::timestamp >= (cs.first_seen::timestamp - '10 minutes'::interval));
         """
+    commit_sql(client, schema_setup)
     commit_sql(client, table_setup)
     commit_sql(client, callsign_view)
     commit_sql(client, locations_view)
