@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 import socket
+import sys
 import datetime
-import sqlite3
 import argparse
 import time
 import psycopg2
@@ -19,7 +19,7 @@ dbhost = "localhost"
 dbport = "5433"
 dbuser = "user"
 dbpassword = ""
-BUFFER_SIZE = 100
+BUFFER_SIZE = 10000
 BATCH_SIZE = 1
 CONNECT_ATTEMPT_LIMIT = 10
 CONNECT_ATTEMPT_DELAY = 5.0
@@ -72,9 +72,9 @@ def args_parse():
                                 before trying again.\
                                 Defaults to %s" % (CONNECT_ATTEMPT_DELAY,))
     parser.add_argument("--verbose",
-                        type=bool, default=verbose,
+                        action="store_true", default=verbose,
                         help="Print out the messages as they're received.\
-                                Defaults to %s" % (verbose,))
+                                Defaults to quiet mode.")
 
     # parse command line options
     args = parser.parse_args()
@@ -95,7 +95,7 @@ def commit_data(conn, data, datestamp, args):
                 print(line)
             data_dict = dict(zip(keys, line))
             for key, value in data_dict.items():
-                if value is '':
+                if value == '':
                     data_dict[key] = None
             insert_str = sql.SQL("insert into {} ({}) values ({})").format(
                 sql.Identifier(dbtable),
@@ -115,17 +115,17 @@ def commit_data(conn, data, datestamp, args):
             except psycopg2.Error as e:
                 print(e.pgcode)
                 print(e.pgerror)
-                return quit()
+                return sys.exit()
             except Exception as e:
                 print("Issue detected: ", e)
                 return None
     return None
 
-def commit_sql(conn, sql):
+def commit_sql(conn, sql_statement):
     "Handles committing queries to the db, single transactions"
     try:
         cur = conn.cursor()
-        cur.execute(sql)
+        cur.execute(sql_statement)
         conn.commit()
         return ['ok', 'success', 'OK']
     except Exception as e:
@@ -154,7 +154,6 @@ def connect_to_socket(loc, port):
 
 def main():
     "The meat of the program"
-    start_time = datetime.datetime.utcnow()
     args = args_parse()
     client = connect_to_db(args.dbname, args.dbuser, args.dbhost, args.dbpass, args.dbport)
     table_setup = """CREATE TABLE IF NOT EXISTS %s(
@@ -209,15 +208,14 @@ def main():
                       SELECT DISTINCT l.*, cs.callsign
                       FROM locations l JOIN callsigns cs
                       ON (l.hex_ident = cs.hex_ident
-                      and l.parsed_time <= strftime('%Y-%m-%dT%H:%M:%S',cs.last_seen, "10 minutes")
-                      and l.parsed_time >= strftime('%Y-%m-%dT%H:%M:%S',cs.first_seen,"-10 minutes"));
+                      and l.parsed_time::timestamp <= (cs.last_seen::timestamp + '10 minutes'::interval)
+                      and l.parsed_time::timestamp >= (cs.first_seen::timestamp - '10 minutes'::interval));
         """
     commit_sql(client, table_setup)
     commit_sql(client, callsign_view)
     commit_sql(client, locations_view)
-    #commit_sql(client, flights_view)
+    commit_sql(client, flights_view)
 
-    count_total = 0
     count_failed_connection_attempts = 1
 
     while count_failed_connection_attempts < args.connect_attempt_limit:
@@ -233,7 +231,7 @@ def main():
             time.sleep(args.connect_attempt_delay)
     else:
         print("Failed to get socket connection")
-        quit()
+        sys.exit()
 
     data_str = ""
 
@@ -271,17 +269,15 @@ def main():
                                 Making attempt %s." % (count_failed_connection_attempts))
                         time.sleep(args.connect_attempt_delay)
                 else:
-                    quit()
+                    sys.exit()
                 continue
             data = data_str.split("\n")
             commit_data(client, data, ds, args)
     except KeyboardInterrupt:
         print("\n%s Closing connection" % (ts,))
         s.close()
-
         client.commit()
         client.close()
-        print(ts, "%s messages added to your database" % (count_total,))
 
 if __name__ == '__main__':
     main()
