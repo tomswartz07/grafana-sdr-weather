@@ -14,6 +14,7 @@ dumphost = "localhost"
 dumpport = 30003
 # Database
 dbname = "database"
+dbschema = "adsb"
 dbtable = "adsb_messages"
 dbhost = "localhost"
 dbport = "5433"
@@ -51,6 +52,8 @@ def args_parse():
                         type=str, default=dbuser,
                         help="The user with which to connect to the database\
                                 Defaults to %s" % (dbuser,))
+    parser.add_argument("--dbschema",
+                        type=str, default=dbschema)
     parser.add_argument("--dbpass",
                         type=str, default=dbpassword)
     parser.add_argument("--buffer-size",
@@ -132,10 +135,10 @@ def commit_sql(conn, sql_statement):
         print("Issue detected: ", e)
         return ['remove', 'danger', 'Issue Detected']
 
-def connect_to_db(db, user, host, password, port):
+def connect_to_db(db, user, host, password, port, schema):
     "Handle connecting to db"
-    connection = "dbname='%s' user='%s' host='%s' password='%s' port='%s' application_name='%s'" % (
-        db, user, host, password, port, "dump1090 ADS-B Loader"
+    connection = "dbname='%s' user='%s' host='%s' password='%s' port='%s' application_name='%s' options='-csearch_path=%s'" % (
+        db, user, host, password, port, "dump1090 ADS-B Loader", schema
         )
     try:
         print("Connecting to db")
@@ -155,7 +158,7 @@ def connect_to_socket(loc, port):
 def main():
     "The meat of the program"
     args = args_parse()
-    client = connect_to_db(args.dbname, args.dbuser, args.dbhost, args.dbpass, args.dbport)
+    client = connect_to_db(args.dbname, args.dbuser, args.dbhost, args.dbpass, args.dbport, args.dbschema)
     table_setup = """CREATE TABLE IF NOT EXISTS %s(
                         message_type TEXT,
                         transmission_type INT,
