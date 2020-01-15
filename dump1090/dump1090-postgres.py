@@ -91,6 +91,7 @@ def commit_data(conn, data, datestamp, args):
             'logged_time', 'callsign', 'altitude', 'ground_speed', 'track', 'lat', 'lon',\
             'vertical_rate', 'squawk', 'alert', 'emergency', 'spi', 'is_on_ground', 'parsed_time']
     for d in data:
+        d = d.strip("\r")
         line = d.split(",")
         if len(line) == 22:
             line.append(datestamp)
