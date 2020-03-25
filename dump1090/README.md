@@ -235,7 +235,7 @@ altitude) mapped to the hex_ident and time the entry was parsed. Not every
 hex_ident is guaranteed to be associated with a callsign, but most will be.
 
 For example, If you wanted to track where the FedEx flight `FDX1167` went on
-October 16th you'd use its hex_ident (A8F63B) from the `callsigns` view to
+December 2nd- you'd use its hex_ident (A6893C) from the `callsigns` view to
 isolate it:
 
 ```sql
@@ -246,7 +246,7 @@ limit 10;
 ```
 Returns:
 ```
-"hex_ident"	"parsed_time"	"lon"	"lat"	"altitude"
+"hex_ident"	"parsed_time"	              "lon"	    "lat"	  "altitude"
 "A6893C"	"2019-12-02T21:26:53.361368"	-76.4915	40.1673	14300
 "A6893C"	"2019-12-02T21:26:54.225644"	-76.4894	40.1668	14275
 "A6893C"	"2019-12-02T21:26:57.238380"	-76.4829	40.1653	14225
