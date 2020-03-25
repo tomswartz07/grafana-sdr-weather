@@ -104,7 +104,7 @@ def commit_sql(conn, sql):
 
 client = connect_to_db('database', 'user', 'host', 'password', 'port')
 print("Connected!")
-test_table = 'CREATE TABLE IF NOT EXISTS weather (id serial PRIMARY KEY, info varchar, data json)'
+test_table = 'CREATE TABLE IF NOT EXISTS weather (id serial PRIMARY KEY, info varchar, data jsonb)'
 commit_sql(client, test_table)
 
 source = sys.stdin
