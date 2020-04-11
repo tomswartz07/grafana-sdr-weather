@@ -144,7 +144,7 @@ for line in source:
         continue # invalid: we have no data #TODO: notify about error
 
     try:
-        insert_data = "INSERT INTO %s (info, data) VALUES ('', '%s')" % ("weather", json.dumps(json_out))
+        insert_data = "INSERT INTO %s (info, data) VALUES ('', '%s') ON CONFLICT DO NOTHING" % ("weather", json.dumps(json_out))
         commit_sql(client, insert_data)
     except Exception as e:
         print("error {} writing {}".format(e, json_out), file=sys.stderr)
