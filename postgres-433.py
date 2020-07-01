@@ -97,6 +97,7 @@ def commit_sql(conn, sql):
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
+        conn.close()
         return ['ok', 'success', 'OK']
     except Exception as e:
         print("Issue detected: ", e)
@@ -140,7 +141,7 @@ for line in source:
                 continue
     json_out['tags'] = json_in # the remainder
 
-    if not len(json_out['fields']):
+    if json_out['fields']:
         continue # invalid: we have no data #TODO: notify about error
 
     try:
