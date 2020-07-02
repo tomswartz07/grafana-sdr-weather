@@ -140,7 +140,7 @@ for line in source:
                 continue
     json_out['tags'] = json_in # the remainder
 
-    if json_out['fields']:
+    if not len(json_out['fields']):
         print("No Data, continuing")
         continue
 
