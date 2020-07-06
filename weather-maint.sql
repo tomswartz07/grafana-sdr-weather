@@ -45,6 +45,12 @@ RENAME TO weather_old;
 ALTER TABLE weather_new
 RENAME TO weather;
 
+ALTER SEQUENCE weather_id_seq OWNED BY weather.id;
+
+-- Fix the permissions
 GRANT ALL ON TABLE weather TO superuser-account;
 GRANT SELECT ON TABLE weather TO grafana-account;
 GRANT INSERT ON TABLE weather TO remote-account;
+
+-- Optionally drop the table automatically
+--DROP TABLE weather_old;
