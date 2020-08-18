@@ -60,3 +60,19 @@ GROUP BY 1
 ORDER BY 1 ASC
 LIMIT 1
 ;
+
+-- Garage stats
+SELECT
+date_trunc('month', (data ->> 'time')::timestamptz) AS "Garage",
+MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
+MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
+AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp"
+FROM weather
+WHERE
+(data -> 'tags' ->> 'id') like '9359'
+AND
+(data ->> 'time')::timestamptz BETWEEN now() - '1 month'::interval AND now()
+GROUP BY 1
+ORDER BY 1 ASC
+LIMIT 1
+;
