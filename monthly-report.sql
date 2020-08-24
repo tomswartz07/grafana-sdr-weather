@@ -15,7 +15,7 @@ FROM weather
 WHERE
 (data ->> 'measurement') LIKE '%3n1%'
 AND
-(data ->> 'time')::timestamptz BETWEEN now() - '1 month'::interval AND now()
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', current_date - interval '1 month') and date_trunc('month', current_date)
 GROUP BY 1
 ORDER BY 1 ASC
 LIMIT 1
@@ -34,7 +34,7 @@ FROM weather
 WHERE
 (data ->> 'measurement') LIKE '%3n1%'
 AND
-(data ->> 'time')::timestamptz BETWEEN now() - '1 month'::interval AND now()
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', CURRENT_DATE - interval '1 month') and date_trunc('month', CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 ASC
 ;
@@ -55,10 +55,9 @@ FROM weather
 WHERE
 (data -> 'tags' ->> 'id') like '13064'
 AND
-(data ->> 'time')::timestamptz BETWEEN now() - '1 month'::interval AND now()
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', CURRENT_DATE - interval '1 month') and date_trunc('month', CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 ASC
-LIMIT 1
 ;
 
 -- Garage stats
@@ -71,8 +70,23 @@ FROM weather
 WHERE
 (data -> 'tags' ->> 'id') like '9359'
 AND
-(data ->> 'time')::timestamptz BETWEEN now() - '1 month'::interval AND now()
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', CURRENT_DATE - interval '1 month') and date_trunc('month', CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 ASC
-LIMIT 1
+;
+
+-- ADS/B Stats
+\set QUIET 1
+\x off
+\set QUIET 0
+SELECT
+date_trunc('day', parsed_time::timestamptz) AS "ADS/B Stats",
+COUNT("transmission_type") as "Messages"
+FROM adsb.adsb_messages
+WHERE
+parsed_time::timestamptz between date_trunc('month', CURRENT_DATE - interval '1 month') and date_trunc('month', CURRENT_DATE)
+GROUP BY
+1
+ORDER BY
+1 ASC
 ;
