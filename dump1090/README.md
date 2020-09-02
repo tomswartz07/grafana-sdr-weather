@@ -271,14 +271,10 @@ WHERE parsed_time::timestamptz BETWEEN now() - INTERVAL '24h' AND now();
 
 A display showing lines for each individual craft, for example:
 ```sql
-select hex_ident, num, ST_MAKELINE(ST_SetSRID, geom2) 
-from
-(
-  select hex_ident, row_number()
-  over w
-  as num, ST_SetSRID(ST_MakePoint(lon, lat), 4326), 
-  lead(ST_SetSRID(ST_MakePoint(lon, lat), 4326)) over w as geom2
-  from locations window w as (partition by hex_ident order by parsed_time)
-) as q
+select hex_ident, num, ST_MAKELINE(geom, geom2) from(
+select hex_ident, row_number() over w as num,
+ST_SetSRID(ST_MakePoint(lon, lat), 4326) as geom,
+lead(ST_SetSRID(ST_MakePoint(lon, lat), 4326)) over w as geom2
+from locations window w as (partition by hex_ident order by parsed_time)) as q
 where geom2 is not null;
 ```
