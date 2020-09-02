@@ -257,3 +257,14 @@ Returns:
 "A6893C"	"2019-12-02T21:27:10.998482"	-76.4537	40.1583	13925
 "A6893C"	"2019-12-02T21:27:12.843365"	-76.4494	40.1573	13900
 ```
+
+If you have PostGIS, the geography/GIS extension installed on the
+database, you can perform very powerful queries with the location data.
+
+For example, a simple map, making points of all observed aircraft locations
+in the past 24 hours:
+
+```sql
+SELECT hex_ident, ST_SetSRID(ST_MakePoint(lon, lat), 4326) FROM locations
+WHERE parsed_time::timestamptz BETWEEN now() - INTERVAL '24h' AND now();
+```
