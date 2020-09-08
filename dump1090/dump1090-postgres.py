@@ -247,7 +247,7 @@ def main():
             #get current time
             cur_time = datetime.datetime.utcnow()
             ds = cur_time.isoformat()
-            ts = cur_time.strftime("%H:%M:%S")
+            ts = cur_time.strftime("%d %b %y %H:%M:%S")
             data_str = ""
 
             # receive a stream message
