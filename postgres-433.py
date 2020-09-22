@@ -31,6 +31,9 @@ mappings = {
         'wind_gust': None,
         'wind_speed': None,
         'wind_speed_mph': None,
+        'wind_avg_mi_h': None,
+        'wind_avg_m_s': None,
+        'wind_avg_km_h': None,
 
         'winddirection': None,
         'direction': None,
@@ -42,10 +45,14 @@ mappings = {
         'snr': None,
 
         'battery': None,
+        'battery_ok': None,
         'battery_mV': None,
+        'battery_V': None,
 
         'rain': None,
         'rain_rate': None,
+        'rain_rate_in_h': None,
+        'rain_rate_mm_h': None,
         'total_rain': None,
         'rain_total': None,
         'rainfall_accumulation': None,
@@ -74,6 +81,8 @@ mappings = {
         'repeat': None,
         'current': None,
         'interval': None,
+        'mic': None,
+        'channel': None,
 
         'heating': None,
         'heating_temp': None,
