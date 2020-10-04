@@ -7,7 +7,7 @@
 \set QUIET 0
 -- Monthly Stats
 SELECT
-date_trunc('month', (data ->> 'time')::timestamptz) AS "Outdoor",
+date_trunc('month', (data ->> 'time')::timestamptz)::date AS "Outdoor",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
 AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average"
@@ -26,7 +26,7 @@ LIMIT 1
 \x auto
 \set QUIET 0
 SELECT
-date_trunc('day', (data ->> 'time')::timestamptz) AS "Date",
+date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Date",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Daily Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Daily High",
 AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp"
@@ -44,7 +44,7 @@ ORDER BY 1 ASC
 \x on
 \set QUIET 0
 SELECT
-date_trunc('month', (data ->> 'time')::timestamptz) AS "Server Room",
+date_trunc('month', (data ->> 'time')::timestamptz)::date AS "Server Room",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
 AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp",
@@ -62,7 +62,7 @@ ORDER BY 1 ASC
 
 -- Garage stats
 SELECT
-date_trunc('month', (data ->> 'time')::timestamptz) AS "Garage",
+date_trunc('month', (data ->> 'time')::timestamptz)::date AS "Garage",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
 AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp"
@@ -80,7 +80,7 @@ ORDER BY 1 ASC
 \x off
 \set QUIET 0
 SELECT
-date_trunc('day', parsed_time::timestamptz) AS "ADS/B Stats",
+date_trunc('day', parsed_time::timestamptz)::date AS "ADS/B Stats",
 COUNT("transmission_type") as "Messages"
 FROM adsb.adsb_messages
 WHERE
