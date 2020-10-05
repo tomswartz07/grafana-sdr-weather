@@ -168,9 +168,9 @@ def main():
                         aircraft_id TEXT,
                         hex_ident TEXT,
                         flight_id TEXT,
-                        generated_date TEXT,
+                        generated_date DATE,
                         generated_time TEXT,
-                        logged_date TEXT,
+                        logged_date DATE,
                         logged_time TEXT,
                         callsign TEXT,
                         altitude INT,
@@ -184,7 +184,7 @@ def main():
                         emergency INT,
                         spi INT,
                         is_on_ground INT,
-                        parsed_time TEXT
+                        parsed_time TIMESTAMPTZ
                 );
         """ % (args.dbschema, dbtable)
 
@@ -245,7 +245,7 @@ def main():
         #loop until an exception
         while True:
             #get current time
-            cur_time = datetime.datetime.utcnow()
+            cur_time = datetime.datetime.now()
             ds = cur_time.isoformat()
             ts = cur_time.strftime("%d %b %y %H:%M:%S")
             data_str = ""
