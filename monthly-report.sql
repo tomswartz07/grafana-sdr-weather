@@ -31,7 +31,8 @@ date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Date",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Daily Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Daily High",
 AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp",
-MAX(((data -> 'fields') -> 'wind_speed_mph')::numeric) AS "Max Wind"
+MAX(((data -> 'fields') -> 'wind_speed_mph')::numeric) AS "Max Wind",
+AVG(((data -> 'fields') -> 'wind_speed_mph')::numeric)::numeric(7,4) AS "Avg Wind"
 FROM weather
 WHERE
 (data ->> 'measurement') LIKE '%3n1%'
