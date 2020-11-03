@@ -10,7 +10,8 @@ SELECT
 date_trunc('month', (data ->> 'time')::timestamptz)::date AS "Outdoor",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
-AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average"
+AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average",
+MAX(((data -> 'fields') -> 'wind_speed_mph')::numeric) AS "Max Wind"
 FROM weather
 WHERE
 (data ->> 'measurement') LIKE '%3n1%'
@@ -29,7 +30,8 @@ SELECT
 date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Date",
 MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Daily Low",
 MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Daily High",
-AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp"
+AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp",
+MAX(((data -> 'fields') -> 'wind_speed_mph')::numeric) AS "Max Wind"
 FROM weather
 WHERE
 (data ->> 'measurement') LIKE '%3n1%'
@@ -78,6 +80,7 @@ ORDER BY 1 ASC
 -- ADS/B Stats
 \set QUIET 1
 \x off
+\c adsb
 \set QUIET 0
 SELECT
 date_trunc('day', parsed_time::timestamptz)::date AS "ADS/B Stats",
