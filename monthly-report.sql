@@ -42,6 +42,27 @@ GROUP BY 1
 ORDER BY 1 ASC
 ;
 
+-- Living Room stats
+\set QUIET 1
+\x on
+\set QUIET 0
+SELECT
+date_trunc('month', (data ->> 'time')::timestamptz)::date AS "Living Room",
+MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
+MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
+AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp",
+MIN(((data -> 'fields') -> 'humidity')::numeric) AS "Min Humidity",
+MAX(((data -> 'fields') -> 'humidity')::numeric) AS "Max Humidity",
+AVG(((data -> 'fields') -> 'humidity')::numeric)::numeric(7,4) AS "Avg Humidity"
+FROM weather
+WHERE
+(data -> 'tags' ->> 'id') like '11855'
+AND
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', CURRENT_DATE - interval '1 month') and date_trunc('month', CURRENT_DATE)
+GROUP BY 1
+ORDER BY 1 ASC
+;
+
 -- Server Room stats
 \set QUIET 1
 \x on
