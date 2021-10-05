@@ -48,9 +48,13 @@ RENAME TO weather;
 ALTER SEQUENCE weather_id_seq OWNED BY weather.id;
 
 -- Fix the permissions
-GRANT ALL ON TABLE weather TO superuser-account;
-GRANT SELECT ON TABLE weather TO grafana-account;
-GRANT INSERT ON TABLE weather TO remote-account;
+GRANT ALL ON TABLE weather TO tom;
+GRANT SELECT ON TABLE weather TO grafana;
+GRANT INSERT ON TABLE weather TO swartzremote;
 
--- Optionally drop the table automatically
+-- Get latest stats now that the big change has happened
+ANALYZE weather;
+
+-- Optionally drop the table automatically and clear up data
 --DROP TABLE weather_old;
+--VACUUM (FULL, FREEZE, ANALYZE)
