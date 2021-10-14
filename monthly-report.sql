@@ -42,6 +42,80 @@ GROUP BY 1
 ORDER BY 1 ASC
 ;
 
+-- Highs and Lows
+\set QUIET 1
+\x on
+\set QUIET 0
+WITH stats AS (
+        SELECT
+        date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Outdoor",
+        MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "High"
+        FROM weather
+        WHERE
+        (data ->> 'measurement') LIKE '%3n1%'
+        AND
+        (data ->> 'time')::timestamptz BETWEEN date_trunc('month', current_date - interval '1 month') and date_trunc('month', current_date)
+        GROUP BY 1
+        HAVING MAX(((data -> 'fields') -> 'temperature_F')::numeric) > 89
+        ORDER BY 1 ASC
+)
+SELECT
+COUNT(*) AS "Days above 90"
+FROM stats
+;
+\set QUIET 1
+\x off
+\set QUIET 0
+SELECT
+date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Outdoor",
+MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "High"
+FROM weather
+WHERE
+(data ->> 'measurement') LIKE '%3n1%'
+AND
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', current_date - interval '1 month') and date_trunc('month', current_date)
+GROUP BY 1
+HAVING MAX(((data -> 'fields') -> 'temperature_F')::numeric) > 89
+ORDER BY 1 ASC
+;
+
+\set QUIET 1
+\x on
+\set QUIET 0
+WITH stats AS (
+        SELECT
+        date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Outdoor",
+        MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Low"
+        FROM weather
+        WHERE
+        (data ->> 'measurement') LIKE '%3n1%'
+        AND
+        (data ->> 'time')::timestamptz BETWEEN date_trunc('month', current_date - interval '1 month') and date_trunc('month', current_date)
+        GROUP BY 1
+        HAVING MIN(((data -> 'fields') -> 'temperature_F')::numeric) < 33
+        ORDER BY 1 ASC
+)
+SELECT
+COUNT(*) AS "Days below freezing"
+FROM stats
+;
+\set QUIET 1
+\x off
+\set QUIET 0
+SELECT
+date_trunc('day', (data ->> 'time')::timestamptz)::date AS "Outdoor",
+MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Low"
+FROM weather
+WHERE
+(data ->> 'measurement') LIKE '%3n1%'
+AND
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', current_date - interval '1 month') and date_trunc('month', current_date)
+GROUP BY 1
+HAVING MIN(((data -> 'fields') -> 'temperature_F')::numeric) < 33
+ORDER BY 1 ASC
+;
+
+
 -- Living Room stats
 \set QUIET 1
 \x on
