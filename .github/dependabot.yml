@@ -18,3 +18,7 @@ updates:
       interval: "daily"
     assignees:
       - "tomswartz07"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
