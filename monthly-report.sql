@@ -173,6 +173,24 @@ GROUP BY 1
 ORDER BY 1 ASC
 ;
 
+-- Shed stats
+SELECT
+date_trunc('month', (data ->> 'time')::timestamptz)::date AS "Shed",
+MIN(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly Low",
+MAX(((data -> 'fields') -> 'temperature_F')::numeric) AS "Monthly High",
+AVG(((data -> 'fields') -> 'temperature_F')::numeric)::numeric(7,4) AS "Average Temp",
+MIN(((data -> 'fields') -> 'humidity')::numeric) AS "Min Humidity",
+MAX(((data -> 'fields') -> 'humidity')::numeric) AS "Max Humidity",
+AVG(((data -> 'fields') -> 'humidity')::numeric)::numeric(7,4) AS "Avg Humidity"
+FROM weather
+WHERE
+(data -> 'tags' ->> 'id') like '3377'
+AND
+(data ->> 'time')::timestamptz BETWEEN date_trunc('month', CURRENT_DATE - interval '1 month') and date_trunc('month', CURRENT_DATE)
+GROUP BY 1
+ORDER BY 1 ASC
+;
+
 -- ADS/B Stats
 \set QUIET 1
 \x off
