@@ -18,7 +18,7 @@ AND
 --        select
 --        (data -> 'fields' ->> 'temperature_F')::decimal as n
 --        from weather
---        where 
+--        where
 --        --(data -> 'tags' ->> 'id') like '9359'
 --        (data ->> 'measurement') like 'Acurite 3n1%'
 --        and
