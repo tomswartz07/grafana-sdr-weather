@@ -56,5 +56,16 @@ GRANT INSERT ON TABLE weather TO swartzremote;
 ANALYZE weather;
 
 -- Optionally drop the table automatically and clear up data
---DROP TABLE weather_old;
---VACUUM (FULL, FREEZE, ANALYZE)
+DROP TABLE weather_old;
+VACUUM (FULL, FREEZE, ANALYZE)
+
+-- ADS/B Stats
+\set QUIET 1
+\x off
+\c adsb
+\set QUIET 0
+BEGIN;
+DELETE FROM adsb.adsb_messages WHERE parsed_time::timestamptz < now() - interval '1 months' AND transmission_type = 7;
+DELETE FROM adsb.adsb_messages WHERE parsed_time::timestamptz < now() - interval '1 months' AND transmission_type = 8;
+COMMIT;
+VACUUM (FULL, FREEZE, ANALYZE)
