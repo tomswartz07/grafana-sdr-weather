@@ -5,20 +5,28 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "pip"
+    directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
     assignees:
       - "tomswartz07"
-
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/dump1090" # Location of package manifests
+  - package-ecosystem: "pip"
+    directory: "/dump1090"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
     assignees:
       - "tomswartz07"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
