@@ -14,6 +14,8 @@ updates:
       timezone: "America/New_York"
     assignees:
       - "tomswartz07"
+    reviewers:
+      - "tomswartz07"
   - package-ecosystem: "pip"
     directory: "/dump1090"
     schedule:
@@ -23,6 +25,8 @@ updates:
       timezone: "America/New_York"
     assignees:
       - "tomswartz07"
+    reviewers:
+      - "tomswartz07"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -30,3 +34,7 @@ updates:
       day: "monday"
       time: "08:00"
       timezone: "America/New_York"
+    assignees:
+      - "tomswartz07"
+    reviewers:
+      - "tomswartz07"
